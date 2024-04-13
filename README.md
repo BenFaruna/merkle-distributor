@@ -1,66 +1,37 @@
-## Foundry
+# Merkle distributor
 
-**Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**
+This uses a merkle tree to distribute ERC1155 rewards to addresses. A `data.csv` file containing the `address`, `tokenId` and `amount` column is parsed to generate a Merkle tree and proof. The `MerkleDrop` contract serves as the distributor and ERC1155 contract. This is a minimal implementation of the concept that utilizes merkle trees to distribute token rewards to qualified addresses.
 
-Foundry consists of:
 
--   **Forge**: Ethereum testing framework (like Truffle, Hardhat and DappTools).
--   **Cast**: Swiss army knife for interacting with EVM smart contracts, sending transactions and getting chain data.
--   **Anvil**: Local Ethereum node, akin to Ganache, Hardhat Network.
--   **Chisel**: Fast, utilitarian, and verbose solidity REPL.
+## Prerequisite
+- Node, Python, foundry
 
-## Documentation
-
-https://book.getfoundry.sh/
-
-## Usage
-
-### Build
-
-```shell
-$ forge build
+## Setup
+- Install the node packages
+```
+$ npm i
 ```
 
-### Test
+For testing purposes, you can generate synthetic data.
 
-```shell
-$ forge test
+- Create `./scripts/address.csv` file using the command
+```
+$ forge scripts ./scripts/CreateAddress.s.sol
 ```
 
-### Format
-
-```shell
-$ forge fmt
+- Generate synthentic data using the command
+```
+$ python ./scripts/generateData.py
 ```
 
-### Gas Snapshots
-
-```shell
-$ forge snapshot
+- Create merkle tree using the command
+```
+$ npx hardhat run ./scripts/generateTree.ts
 ```
 
-### Anvil
+- Copy the merkle root and edit the `./test/MerkleDrop.t.sol` and change the `root` variable to the root you copied from your terminal.
 
-```shell
-$ anvil
+- Run test with the command
 ```
-
-### Deploy
-
-```shell
-$ forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --private-key <your_private_key>
-```
-
-### Cast
-
-```shell
-$ cast <subcommand>
-```
-
-### Help
-
-```shell
-$ forge --help
-$ anvil --help
-$ cast --help
+$ forge t
 ```
